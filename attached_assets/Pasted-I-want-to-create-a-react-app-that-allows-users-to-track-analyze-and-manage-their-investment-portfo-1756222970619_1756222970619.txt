@@ -1,0 +1,40 @@
+I want to create a react app that allows users to track, analyze, and manage their investment portfolio across multiple asset classes including cryptocurrencies, stocks, commodities, forex, and other financial instruments. Match the styling and interface of how the app in the screenshot is. I’m going from Swift app to converting to React app so it can be accessed by more broad range of users instead of just Mac.
+
+🚀 Core Features
+
+1. Portfolio Management
+•  Multi-Asset Support: Track cryptocurrencies, stocks, commodities, forex pairs, and other assets
+•  Real-Time Price Updates: Automatic price fetching every 2 minutes with manual update options
+•  Quantity Tracking: Monitor holdings and calculate total portfolio value
+•  Smart Asset Search: Search and add assets from external APIs with intelligent symbol matching
+
+2. Advanced Charting & Visualization
+•  📊 Candlestick Charts: Professional OHLC (Open, High, Low, Close) candlestick visualization
+•  📈 Volume Analysis: Interactive volume bar charts with color-coded buy/sell indicators
+•  🎯 Price History: 30-day historical price tracking with realistic sample data generation
+•  📱 Interactive UI: Asset selector, chart switching, and detailed price statistics
+
+3. Data Sources & APIs
+•  🥇 Primary: Coinbase API for cryptocurrency data
+•  🛡️ Intelligent Routing: Automatic API selection based on asset type with failover support
+•  📡 Rate Limiting: Built-in API rate limiting and error handling
+
+4. Smart Data Management
+•  🔧 Auto-Diagnostics: Automatic detection and repair of price data inconsistencies
+•  💾 Storage: Needs to be intergrated with Supabase
+•  🔄 Data Validation: OHLC price validation ensuring chart accuracy
+•  📊 Fallback Pricing: Intelligent fallback prices for 15+ popular assets
+
+5. User Interface Components
+
+#### Main Views:
+•  Asset List View: Comprehensive portfolio overview with elegant cards(see screenshot)
+•  Candlestick Chart View: Professional trading-style charts
+•  Portfolio Average Chart: Portfolio performance visualization
+•  Search & Add Assets: Dynamic asset discovery and addition
+
+#### Advanced Features:
+•  🎨 Elegant Design: Modern interface with themed asset type icons(Tailwind)
+•  🔍 Debug Mode: Comprehensive logging and diagnostic tools
+•  ⚡ Real-Time Updates: Live price feeds with visual update indicators
+•  📱 Responsive Layout: Adaptive UI for different screen sizes
