@@ -19,8 +19,7 @@ export default function Portfolio() {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const { toast } = useToast();
   
-  // For this demo, we'll use a default portfolio ID
-  // In a real app, this would come from routing or user selection
+  // For this demo, we'll use a default portfolio ID initially
   const defaultPortfolioId = "default-portfolio";
   
   const { data: portfolios = [], isLoading: isLoadingPortfolios } = useQuery({
@@ -93,6 +92,8 @@ export default function Portfolio() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/portfolios'] });
       queryClient.invalidateQueries({ queryKey: ['/api/portfolios', defaultPortfolioId] });
+      queryClient.invalidateQueries({ queryKey: ['/api/portfolios', defaultPortfolioId, 'assets'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/portfolios', defaultPortfolioId, 'analytics'] });
       setSearchQuery("");
       setShowSearchResults(false);
       toast({

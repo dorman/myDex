@@ -312,17 +312,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Comprehensive asset database for search
       const allAssets = [
-        // Cryptocurrencies
+        // Major Cryptocurrencies
         { symbol: "BTC", name: "Bitcoin", type: "crypto", icon: "bitcoin" },
         { symbol: "ETH", name: "Ethereum", type: "crypto", icon: "ethereum" },
-        { symbol: "ADA", name: "Cardano", type: "crypto", icon: "cryptocurrency" },
-        { symbol: "DOT", name: "Polkadot", type: "crypto", icon: "cryptocurrency" },
-        { symbol: "LINK", name: "Chainlink", type: "crypto", icon: "cryptocurrency" },
         { symbol: "XRP", name: "Ripple", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "ADA", name: "Cardano", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "SOL", name: "Solana", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "DOGE", name: "Dogecoin", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "DOT", name: "Polkadot", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "SHIB", name: "Shiba Inu", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "AVAX", name: "Avalanche", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "LINK", name: "Chainlink", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "MATIC", name: "Polygon", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "UNI", name: "Uniswap", type: "crypto", icon: "cryptocurrency" },
         { symbol: "LTC", name: "Litecoin", type: "crypto", icon: "cryptocurrency" },
         { symbol: "BCH", name: "Bitcoin Cash", type: "crypto", icon: "cryptocurrency" },
         { symbol: "BNB", name: "Binance Coin", type: "crypto", icon: "cryptocurrency" },
-        { symbol: "SOL", name: "Solana", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "ATOM", name: "Cosmos", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "FTT", name: "FTX Token", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "NEAR", name: "NEAR Protocol", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "ALGO", name: "Algorand", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "VET", name: "VeChain", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "ICP", name: "Internet Computer", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "THETA", name: "THETA", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "XLM", name: "Stellar", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "HBAR", name: "Hedera", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "FIL", name: "Filecoin", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "TRX", name: "TRON", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "ETC", name: "Ethereum Classic", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "MANA", name: "Decentraland", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "SAND", name: "The Sandbox", type: "crypto", icon: "cryptocurrency" },
         
         // Stocks
         { symbol: "AAPL", name: "Apple Inc.", type: "stock", icon: "apple" },

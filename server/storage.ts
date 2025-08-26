@@ -65,9 +65,11 @@ class MemoryStorage implements IStorage {
   }
 
   async createPortfolio(portfolio: InsertPortfolio): Promise<Portfolio> {
+    // Use default-portfolio ID for the first portfolio to match frontend expectations
+    const portfolioId = this.portfoliosStore.length === 0 ? "default-portfolio" : uuidv4();
     const newPortfolio: Portfolio = {
       ...portfolio,
-      id: uuidv4(),
+      id: portfolioId,
       description: portfolio.description || null,
       totalValue: portfolio.totalValue || "0.00",
       totalGainLoss: portfolio.totalGainLoss || "0.00",
