@@ -56,8 +56,8 @@ export default function PortfolioSummary({ portfolio, analytics, isLoading }: Po
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-medium text-gray-400">Total Portfolio Value</h3>
-            <div className="w-8 h-8 bg-brand-green bg-opacity-20 rounded-lg flex items-center justify-center">
-              <Wallet className="text-brand-green h-4 w-4" />
+            <div className="w-8 h-8 bg-gradient-primary bg-opacity-20 rounded-lg flex items-center justify-center">
+              <Wallet className="text-brand-purple h-4 w-4" />
             </div>
           </div>
           <div className="space-y-1">
@@ -65,7 +65,7 @@ export default function PortfolioSummary({ portfolio, analytics, isLoading }: Po
               {formatCurrency(totalValue)}
             </p>
             <p className={`text-sm font-medium flex items-center ${
-              dailyChange >= 0 ? "text-brand-green" : "text-brand-red"
+              dailyChange >= 0 ? "text-brand-purple" : "text-brand-red"
             }`}>
               <TrendingUp className={`text-xs mr-1 h-3 w-3 ${
                 dailyChange < 0 ? "rotate-180" : ""
@@ -83,13 +83,13 @@ export default function PortfolioSummary({ portfolio, analytics, isLoading }: Po
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-medium text-gray-400">Total Gain/Loss</h3>
-            <div className="w-8 h-8 bg-blue-500 bg-opacity-20 rounded-lg flex items-center justify-center">
-              <BarChart3 className="text-blue-500 h-4 w-4" />
+            <div className="w-8 h-8 bg-gradient-secondary bg-opacity-20 rounded-lg flex items-center justify-center">
+              <BarChart3 className="text-brand-peach h-4 w-4" />
             </div>
           </div>
           <div className="space-y-1">
             <p className={`text-3xl font-bold ${
-              totalGainLoss >= 0 ? "text-brand-green" : "text-brand-red"
+              totalGainLoss >= 0 ? "text-brand-purple" : "text-brand-red"
             }`} data-testid="text-total-gain-loss">
               {totalGainLoss >= 0 ? "+" : ""}{formatCurrency(totalGainLoss)}
             </p>
@@ -107,8 +107,8 @@ export default function PortfolioSummary({ portfolio, analytics, isLoading }: Po
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-medium text-gray-400">Assets Count</h3>
-            <div className="w-8 h-8 bg-purple-500 bg-opacity-20 rounded-lg flex items-center justify-center">
-              <BarChart3 className="text-purple-500 h-4 w-4" />
+            <div className="w-8 h-8 bg-gradient-primary bg-opacity-20 rounded-lg flex items-center justify-center">
+              <BarChart3 className="text-gradient h-4 w-4" />
             </div>
           </div>
           <div className="space-y-1">

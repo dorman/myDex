@@ -155,10 +155,10 @@ export default function Portfolio() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-brand-green to-blue-500 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
                   <i className="fas fa-chart-line text-white text-sm"></i>
                 </div>
-                <h1 className="text-xl font-bold text-white">InvestTrack Pro</h1>
+                <h1 className="text-xl font-bold text-gradient">InvestTrack Pro</h1>
               </div>
             </div>
             
@@ -195,9 +195,17 @@ export default function Portfolio() {
           isLoading={isLoading}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Left Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            <PortfolioSidebar 
+              analytics={analytics}
+              portfolioId={defaultPortfolioId}
+            />
+          </div>
+
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-white">
                 {showSearchResults ? 'Search Results' : 'Portfolio Holdings'}
@@ -264,7 +272,7 @@ export default function Portfolio() {
                           className="flex items-center justify-between p-3 bg-dark-bg rounded-lg border border-dark-border hover:border-gray-600 transition-colors"
                         >
                           <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-gradient-to-r from-brand-green to-blue-500 rounded-full flex items-center justify-center">
+                            <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
                               <span className="text-white text-xs font-bold">
                                 {asset.symbol.charAt(0)}
                               </span>
@@ -280,7 +288,7 @@ export default function Portfolio() {
                           <Button
                             onClick={() => handleAddAsset(asset)}
                             disabled={addAssetMutation.isPending}
-                            className="bg-brand-green hover:bg-green-600 text-white"
+                            className="bg-gradient-primary hover:bg-purple-600 text-white"
                             size="sm"
                             data-testid={`button-add-${asset.symbol.toLowerCase()}`}
                           >
@@ -304,12 +312,6 @@ export default function Portfolio() {
               )}
             </div>
           </div>
-
-          {/* Sidebar */}
-          <PortfolioSidebar 
-            analytics={analytics}
-            portfolioId={defaultPortfolioId}
-          />
         </div>
       </div>
 

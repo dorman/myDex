@@ -273,7 +273,7 @@ export default function AddAssetModal({ isOpen, onClose, portfolioId }: AddAsset
               <Button
                 type="submit"
                 disabled={createAssetMutation.isPending}
-                className="bg-brand-green hover:bg-green-600 text-white"
+                className="bg-gradient-primary hover:bg-purple-600 text-white"
                 data-testid="button-add-asset"
               >
                 {createAssetMutation.isPending && (

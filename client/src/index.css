@@ -37,12 +37,14 @@
   --sidebar-border: hsl(220, 13%, 91%);
   --sidebar-ring: hsl(163, 94%, 24%);
   
-  /* Custom dark theme colors matching the design */
-  --dark-bg: hsl(222, 47%, 11%);
-  --dark-card: hsl(215, 25%, 17%);
-  --dark-border: hsl(217, 19%, 27%);
-  --brand-green: hsl(163, 94%, 24%);
-  --brand-red: hsl(343, 90%, 62%);
+  /* Custom purple and peach gradient theme */
+  --dark-bg: linear-gradient(135deg, hsl(260, 30%, 8%), hsl(330, 40%, 12%));
+  --dark-card: linear-gradient(135deg, hsl(260, 25%, 15%), hsl(330, 30%, 18%));
+  --dark-border: hsl(280, 20%, 25%);
+  --brand-purple: hsl(280, 70%, 60%);
+  --brand-peach: hsl(15, 85%, 75%);
+  --gradient-primary: linear-gradient(135deg, hsl(280, 70%, 60%), hsl(15, 85%, 75%));
+  --gradient-secondary: linear-gradient(135deg, hsl(260, 60%, 50%), hsl(25, 80%, 70%));
   
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-serif: Georgia, serif;
@@ -51,25 +53,25 @@
 }
 
 .dark {
-  --background: hsl(222, 47%, 11%);
-  --foreground: hsl(210, 40%, 98%);
-  --card: hsl(215, 25%, 17%);
-  --card-foreground: hsl(210, 40%, 98%);
-  --popover: hsl(215, 25%, 17%);
-  --popover-foreground: hsl(210, 40%, 98%);
-  --primary: hsl(163, 94%, 24%);
+  --background: linear-gradient(135deg, hsl(260, 30%, 8%), hsl(330, 40%, 12%));
+  --foreground: hsl(280, 20%, 95%);
+  --card: linear-gradient(135deg, hsl(260, 25%, 15%), hsl(330, 30%, 18%));
+  --card-foreground: hsl(280, 15%, 95%);
+  --popover: hsl(260, 25%, 15%);
+  --popover-foreground: hsl(280, 15%, 95%);
+  --primary: hsl(280, 70%, 60%);
   --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(217, 19%, 27%);
-  --secondary-foreground: hsl(210, 40%, 98%);
-  --muted: hsl(215, 25%, 17%);
-  --muted-foreground: hsl(217, 11%, 65%);
-  --accent: hsl(217, 19%, 27%);
-  --accent-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(280, 20%, 25%);
+  --secondary-foreground: hsl(280, 15%, 95%);
+  --muted: hsl(260, 25%, 15%);
+  --muted-foreground: hsl(280, 15%, 70%);
+  --accent: hsl(280, 20%, 25%);
+  --accent-foreground: hsl(280, 15%, 95%);
   --destructive: hsl(343, 90%, 62%);
   --destructive-foreground: hsl(0, 0%, 98%);
-  --border: hsl(217, 19%, 27%);
-  --input: hsl(215, 25%, 17%);
-  --ring: hsl(163, 94%, 24%);
+  --border: hsl(280, 20%, 25%);
+  --input: hsl(260, 25%, 15%);
+  --ring: hsl(280, 70%, 60%);
   --chart-1: hsl(163, 94%, 24%);
   --chart-2: hsl(159, 100%, 36%);
   --chart-3: hsl(42, 93%, 56%);
@@ -95,29 +97,55 @@
   }
 }
 
-/* Custom utility classes matching the design */
+/* Custom utility classes with purple and peach gradient theme */
 .bg-dark-bg {
-  background-color: hsl(222, 47%, 11%);
+  background: linear-gradient(135deg, hsl(260, 30%, 8%), hsl(330, 40%, 12%));
 }
 
 .bg-dark-card {
-  background-color: hsl(215, 25%, 17%);
+  background: linear-gradient(135deg, hsl(260, 25%, 15%), hsl(330, 30%, 18%));
+  backdrop-filter: blur(20px);
+  border: 1px solid hsl(280, 20%, 25%);
 }
 
 .border-dark-border {
-  border-color: hsl(217, 19%, 27%);
+  border-color: hsl(280, 20%, 25%);
 }
 
-.text-brand-green {
-  color: hsl(163, 94%, 24%);
+.text-brand-purple {
+  color: hsl(280, 70%, 60%);
 }
 
-.bg-brand-green {
-  background-color: hsl(163, 94%, 24%);
+.bg-brand-purple {
+  background-color: hsl(280, 70%, 60%);
 }
 
-.hover\:bg-green-600:hover {
-  background-color: hsl(163, 80%, 20%);
+.text-brand-peach {
+  color: hsl(15, 85%, 75%);
+}
+
+.bg-brand-peach {
+  background-color: hsl(15, 85%, 75%);
+}
+
+/* Gradient utilities */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, hsl(280, 70%, 60%), hsl(15, 85%, 75%));
+}
+
+.bg-gradient-secondary {
+  background: linear-gradient(135deg, hsl(260, 60%, 50%), hsl(25, 80%, 70%));
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, hsl(280, 70%, 60%), hsl(15, 85%, 75%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hover\:bg-purple-600:hover {
+  background-color: hsl(280, 70%, 50%);
 }
 
 .text-brand-red {

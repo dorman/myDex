@@ -47,15 +47,15 @@ export default function PortfolioSidebar({ analytics, portfolioId }: PortfolioSi
   const getTypeColor = (type: string) => {
     switch (type) {
       case "crypto":
-        return "bg-orange-500";
+        return "bg-gradient-primary";
       case "stock":
-        return "bg-blue-500";
+        return "bg-gradient-secondary";
       case "commodity":
-        return "bg-yellow-500";
+        return "bg-brand-peach";
       case "forex":
-        return "bg-purple-500";
+        return "bg-brand-purple";
       default:
-        return "bg-gray-500";
+        return "bg-gradient-primary";
     }
   };
 
