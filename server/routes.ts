@@ -310,21 +310,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { query, type } = req.query;
       
-      // Mock search results - in real implementation, this would search external APIs
-      const mockResults = [
+      // Comprehensive asset database for search
+      const allAssets = [
+        // Cryptocurrencies
         { symbol: "BTC", name: "Bitcoin", type: "crypto", icon: "bitcoin" },
         { symbol: "ETH", name: "Ethereum", type: "crypto", icon: "ethereum" },
+        { symbol: "ADA", name: "Cardano", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "DOT", name: "Polkadot", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "LINK", name: "Chainlink", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "XRP", name: "Ripple", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "LTC", name: "Litecoin", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "BCH", name: "Bitcoin Cash", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "BNB", name: "Binance Coin", type: "crypto", icon: "cryptocurrency" },
+        { symbol: "SOL", name: "Solana", type: "crypto", icon: "cryptocurrency" },
+        
+        // Stocks
         { symbol: "AAPL", name: "Apple Inc.", type: "stock", icon: "apple" },
-        { symbol: "NVDA", name: "NVIDIA Corporation", type: "stock", icon: "nvidia" },
+        { symbol: "GOOGL", name: "Alphabet Inc.", type: "stock", icon: "search" },
+        { symbol: "MSFT", name: "Microsoft Corp.", type: "stock", icon: "monitor" },
+        { symbol: "AMZN", name: "Amazon.com Inc.", type: "stock", icon: "package" },
+        { symbol: "TSLA", name: "Tesla Inc.", type: "stock", icon: "zap" },
+        { symbol: "NVDA", name: "NVIDIA Corporation", type: "stock", icon: "cpu" },
+        { symbol: "META", name: "Meta Platforms Inc.", type: "stock", icon: "share" },
+        { symbol: "NFLX", name: "Netflix Inc.", type: "stock", icon: "play" },
+        { symbol: "AMD", name: "Advanced Micro Devices", type: "stock", icon: "cpu" },
+        { symbol: "INTC", name: "Intel Corporation", type: "stock", icon: "cpu" },
+        
+        // Commodities
         { symbol: "XAUUSD", name: "Gold", type: "commodity", icon: "coins" },
-        { symbol: "EURUSD", name: "EUR/USD", type: "forex", icon: "dollar-sign" }
-      ].filter(asset => 
-        (!query || asset.name.toLowerCase().includes(String(query).toLowerCase()) || 
-         asset.symbol.toLowerCase().includes(String(query).toLowerCase())) &&
-        (!type || asset.type === String(type))
-      );
+        { symbol: "XAGUSD", name: "Silver", type: "commodity", icon: "coins" },
+        { symbol: "CRUDE", name: "Crude Oil", type: "commodity", icon: "fuel" },
+        { symbol: "NATGAS", name: "Natural Gas", type: "commodity", icon: "flame" },
+        
+        // Forex
+        { symbol: "EURUSD", name: "EUR/USD", type: "forex", icon: "dollar-sign" },
+        { symbol: "GBPUSD", name: "GBP/USD", type: "forex", icon: "dollar-sign" },
+        { symbol: "USDJPY", name: "USD/JPY", type: "forex", icon: "dollar-sign" },
+        { symbol: "AUDUSD", name: "AUD/USD", type: "forex", icon: "dollar-sign" },
+        
+        // ETFs
+        { symbol: "SPY", name: "SPDR S&P 500 ETF", type: "etf", icon: "trending-up" },
+        { symbol: "QQQ", name: "Invesco QQQ Trust", type: "etf", icon: "trending-up" },
+        { symbol: "VTI", name: "Vanguard Total Stock Market ETF", type: "etf", icon: "trending-up" },
+        { symbol: "IWM", name: "iShares Russell 2000 ETF", type: "etf", icon: "trending-up" }
+      ];
       
-      res.json(mockResults);
+      // If no query, return empty array (don't show all assets)
+      if (!query || String(query).trim().length === 0) {
+        return res.json([]);
+      }
+      
+      const searchTerm = String(query).toLowerCase().trim();
+      
+      // Filter assets based on query - match symbol or name, including partial matches
+      const filteredResults = allAssets.filter(asset => {
+        const symbolMatch = asset.symbol.toLowerCase().includes(searchTerm);
+        const nameMatch = asset.name.toLowerCase().includes(searchTerm);
+        const typeMatch = !type || asset.type === String(type);
+        
+        return (symbolMatch || nameMatch) && typeMatch;
+      });
+      
+      // Sort results: exact symbol matches first, then partial symbol matches, then name matches
+      filteredResults.sort((a, b) => {
+        const aSymbolExact = a.symbol.toLowerCase() === searchTerm;
+        const bSymbolExact = b.symbol.toLowerCase() === searchTerm;
+        const aSymbolStart = a.symbol.toLowerCase().startsWith(searchTerm);
+        const bSymbolStart = b.symbol.toLowerCase().startsWith(searchTerm);
+        
+        if (aSymbolExact && !bSymbolExact) return -1;
+        if (bSymbolExact && !aSymbolExact) return 1;
+        if (aSymbolStart && !bSymbolStart) return -1;
+        if (bSymbolStart && !aSymbolStart) return 1;
+        
+        return a.symbol.localeCompare(b.symbol);
+      });
+      
+      // Limit results to prevent overwhelming UI
+      const results = filteredResults.slice(0, 10);
+      
+      res.json(results);
     } catch (error) {
       console.error("Error searching assets:", error);
       res.status(500).json({ message: "Failed to search assets" });

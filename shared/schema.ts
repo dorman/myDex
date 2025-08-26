@@ -71,3 +71,11 @@ export type Asset = typeof assets.$inferSelect;
 
 export type InsertPriceHistory = z.infer<typeof insertPriceHistorySchema>;
 export type PriceHistory = typeof priceHistory.$inferSelect;
+
+// Search result type for asset search API
+export type AssetSearchResult = {
+  symbol: string;
+  name: string;
+  type: string;
+  icon?: string;
+};
