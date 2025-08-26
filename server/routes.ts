@@ -245,9 +245,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         { symbol: "XAUUSD", name: "Gold", type: "commodity", icon: "coins" },
         { symbol: "EURUSD", name: "EUR/USD", type: "forex", icon: "dollar-sign" }
       ].filter(asset => 
-        (!query || asset.name.toLowerCase().includes(query.toString().toLowerCase()) || 
-         asset.symbol.toLowerCase().includes(query.toString().toLowerCase())) &&
-        (!type || asset.type === type)
+        (!query || asset.name.toLowerCase().includes(String(query).toLowerCase()) || 
+         asset.symbol.toLowerCase().includes(String(query).toLowerCase())) &&
+        (!type || asset.type === String(type))
       );
       
       res.json(mockResults);
@@ -263,11 +263,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const assets = await storage.getAssetsByPortfolio(req.params.portfolioId);
       
       // Calculate allocation by asset type
-      const totalValue = assets.reduce((sum, asset) => sum + parseFloat(asset.totalValue), 0);
+      const totalValue = assets.reduce((sum, asset) => sum + parseFloat(asset.totalValue || '0'), 0);
       const allocationByType: Record<string, { value: number; percentage: number; count: number }> = {};
       
       for (const asset of assets) {
-        const assetValue = parseFloat(asset.totalValue);
+        const assetValue = parseFloat(asset.totalValue || '0');
         if (!allocationByType[asset.assetType]) {
           allocationByType[asset.assetType] = { value: 0, percentage: 0, count: 0 };
         }
@@ -281,7 +281,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Find best and worst performers
-      const sortedAssets = assets.sort((a, b) => parseFloat(b.dailyChangePercent) - parseFloat(a.dailyChangePercent));
+      const sortedAssets = assets.sort((a, b) => parseFloat(b.dailyChangePercent || '0') - parseFloat(a.dailyChangePercent || '0'));
       const bestPerformer = sortedAssets[0];
       const worstPerformer = sortedAssets[sortedAssets.length - 1];
       
@@ -316,10 +316,10 @@ async function updatePortfolioTotals(portfolioId: string) {
   try {
     const assets = await storage.getAssetsByPortfolio(portfolioId);
     
-    const totalValue = assets.reduce((sum, asset) => sum + parseFloat(asset.totalValue), 0);
-    const totalGainLoss = assets.reduce((sum, asset) => sum + parseFloat(asset.gainLoss), 0);
-    const totalCost = assets.reduce((sum, asset) => sum + (parseFloat(asset.quantity) * parseFloat(asset.purchasePrice)), 0);
-    const dailyChange = assets.reduce((sum, asset) => sum + parseFloat(asset.dailyChange), 0);
+    const totalValue = assets.reduce((sum, asset) => sum + parseFloat(asset.totalValue || '0'), 0);
+    const totalGainLoss = assets.reduce((sum, asset) => sum + parseFloat(asset.gainLoss || '0'), 0);
+    const totalCost = assets.reduce((sum, asset) => sum + (parseFloat(asset.quantity || '0') * parseFloat(asset.purchasePrice || '0')), 0);
+    const dailyChange = assets.reduce((sum, asset) => sum + parseFloat(asset.dailyChange || '0'), 0);
     
     const totalGainLossPercent = totalCost > 0 ? (totalGainLoss / totalCost) * 100 : 0;
     const dailyChangePercent = totalValue > 0 ? (dailyChange / (totalValue - dailyChange)) * 100 : 0;

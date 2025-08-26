@@ -4,7 +4,7 @@ import { portfolioApi } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { TrendingUp, TrendingDown, Trash2 } from "lucide-react";
+import { TrendingUp, TrendingDown, Trash2, BarChart3 } from "lucide-react";
 import type { Asset } from "@shared/schema";
 
 interface AssetListProps {
@@ -158,8 +158,8 @@ export default function AssetList({ assets, isLoading, portfolioId }: AssetListP
       {/* Asset Rows */}
       <div className="divide-y divide-dark-border">
         {assets.map((asset) => {
-          const dailyChangePercent = parseFloat(asset.dailyChangePercent);
-          const dailyChange = parseFloat(asset.dailyChange);
+          const dailyChangePercent = parseFloat(asset.dailyChangePercent || '0');
+          const dailyChange = parseFloat(asset.dailyChange || '0');
           const isPositive = dailyChangePercent >= 0;
           
           return (
@@ -197,7 +197,7 @@ export default function AssetList({ assets, isLoading, portfolioId }: AssetListP
                 {/* Price */}
                 <div className="col-span-2 text-right">
                   <p className="font-semibold text-white" data-testid={`text-asset-price-${asset.symbol}`}>
-                    {formatCurrency(asset.currentPrice)}
+                    {formatCurrency(asset.currentPrice || '0')}
                   </p>
                 </div>
 
@@ -223,7 +223,7 @@ export default function AssetList({ assets, isLoading, portfolioId }: AssetListP
                 {/* Total Value */}
                 <div className="col-span-1 text-right">
                   <p className="font-semibold text-white" data-testid={`text-asset-value-${asset.symbol}`}>
-                    {formatCurrency(asset.totalValue)}
+                    {formatCurrency(asset.totalValue || '0')}
                   </p>
                 </div>
 
