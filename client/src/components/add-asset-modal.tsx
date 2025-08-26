@@ -40,10 +40,6 @@ const addAssetSchema = z.object({
     (val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0,
     "Quantity must be a positive number"
   ),
-  purchasePrice: z.string().min(1, "Purchase price is required").refine(
-    (val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0,
-    "Purchase price must be a positive number"
-  ),
 });
 
 type AddAssetForm = z.infer<typeof addAssetSchema>;
@@ -66,7 +62,6 @@ export default function AddAssetModal({ isOpen, onClose, portfolioId }: AddAsset
       name: "",
       assetType: undefined,
       quantity: "",
-      purchasePrice: "",
     },
   });
 
@@ -83,7 +78,7 @@ export default function AddAssetModal({ isOpen, onClose, portfolioId }: AddAsset
         name: data.name,
         assetType: data.assetType,
         quantity: data.quantity,
-        purchasePrice: data.purchasePrice,
+        purchasePrice: "0",
         currentPrice: "0",
         totalValue: "0",
         gainLoss: "0",
@@ -242,50 +237,27 @@ export default function AddAssetModal({ isOpen, onClose, portfolioId }: AddAsset
               />
             </div>
 
-            {/* Quantity and Purchase Price */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-300">Quantity</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        step="0.00001"
-                        placeholder="0.00"
-                        {...field}
-                        className="bg-dark-bg border-dark-border text-white placeholder-gray-400"
-                        data-testid="input-quantity"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="purchasePrice"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-300">Purchase Price</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="0.00"
-                        {...field}
-                        className="bg-dark-bg border-dark-border text-white placeholder-gray-400"
-                        data-testid="input-purchase-price"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            {/* Quantity */}
+            <FormField
+              control={form.control}
+              name="quantity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-300">Quantity</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      step="0.00001"
+                      placeholder="0.00"
+                      {...field}
+                      className="bg-dark-bg border-dark-border text-white placeholder-gray-400"
+                      data-testid="input-quantity"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Actions */}
             <div className="flex items-center justify-end space-x-4 pt-4">
