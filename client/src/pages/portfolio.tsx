@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { portfolioApi } from "@/lib/api";
 import PortfolioSummary from "@/components/portfolio-summary";
@@ -13,6 +13,7 @@ import { Plus, Bell, Settings, User, Search, Filter } from "lucide-react";
 export default function Portfolio() {
   const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [hasTriedCreatingPortfolio, setHasTriedCreatingPortfolio] = useState(false);
   const { toast } = useToast();
   
   // For this demo, we'll use a default portfolio ID
@@ -62,10 +63,13 @@ export default function Portfolio() {
     }
   };
 
-  // Initialize default portfolio if none exists
-  if (!isLoadingPortfolios && portfolios.length === 0) {
-    createDefaultPortfolio();
-  }
+  // Initialize default portfolio if none exists - using useEffect to prevent infinite loop
+  useEffect(() => {
+    if (!isLoadingPortfolios && portfolios.length === 0 && !hasTriedCreatingPortfolio) {
+      setHasTriedCreatingPortfolio(true);
+      createDefaultPortfolio();
+    }
+  }, [isLoadingPortfolios, portfolios.length, hasTriedCreatingPortfolio]);
 
   const filteredAssets = assets.filter(asset =>
     searchQuery === "" ||
