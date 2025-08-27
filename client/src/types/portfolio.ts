@@ -34,3 +34,67 @@ export interface ChartData {
   close: number;
   volume: number;
 }
+
+export interface PortfolioIndexData {
+  timestamp: string;
+  value: number;
+  change: number;
+  changePercent: number;
+}
+
+export interface CandlestickData {
+  timestamp: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface PortfolioIndexData {
+  timestamp: string;
+  value: number;
+  change: number;
+  changePercent: number;
+}
+
+export interface CandlestickData {
+  timestamp: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface PortfolioIndexData {
+  timestamp: string;
+  value: number;
+  change: number;
+  changePercent: number;
+}
+
+export interface CandlestickData {
+  timestamp: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface PortfolioIndexData {
+  timestamp: string;
+  value: number;
+  change: number;
+  changePercent: number;
+}
+
+export interface CandlestickData {
+  timestamp: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}

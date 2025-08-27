@@ -67,6 +67,19 @@ export default {
         'dark-border': '#334155',
         'brand-green': '#10B981',
         'brand-red': '#F43F5E',
+        // Peach color palette
+        'peach': {
+          '50': '#FEF7F0',
+          '100': '#FDEEE0',
+          '200': '#FCDCC2',
+          '300': '#FAC8A3',
+          '400': '#F8B485',
+          '500': '#F6A066',
+          '600': '#F48C47',
+          '700': '#F27829',
+          '800': '#D0591B',
+          '900': '#A64515',
+        },
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],

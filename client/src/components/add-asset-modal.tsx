@@ -87,10 +87,11 @@ export default function AddAssetModal({ isOpen, onClose, portfolioId }: AddAsset
         dailyChangePercent: "0",
         metadata: null,
       }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/portfolios", portfolioId, "assets"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/portfolios", portfolioId, "analytics"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/portfolios", portfolioId] });
+    onSuccess: async () => {
+      // Invalidate queries in sequence to avoid race conditions
+      await queryClient.invalidateQueries({ queryKey: ["/api/portfolios", portfolioId, "assets"] });
+      await queryClient.invalidateQueries({ queryKey: ["/api/portfolios", portfolioId, "analytics"] });
+      await queryClient.invalidateQueries({ queryKey: ["/api/portfolios", portfolioId] });
       toast({
         title: "Asset Added",
         description: "The asset has been added to your portfolio successfully.",

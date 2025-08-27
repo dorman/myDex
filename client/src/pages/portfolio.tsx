@@ -5,10 +5,12 @@ import PortfolioSummary from "@/components/portfolio-summary";
 import AssetList from "@/components/asset-list";
 import PortfolioSidebar from "@/components/portfolio-sidebar";
 import AddAssetModal from "@/components/add-asset-modal";
+import UserDropdown from "@/components/UserDropdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Bell, Settings, User, Search, Filter, X } from "lucide-react";
+import { Plus, Bell, Settings, User, Search, Filter, X, BarChart3 } from "lucide-react";
+import { Link } from "wouter";
 import { queryClient } from "@/lib/queryClient";
 import type { AssetSearchResult } from "@shared/schema";
 
@@ -19,51 +21,55 @@ export default function Portfolio() {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const { toast } = useToast();
   
-  // For this demo, we'll use a default portfolio ID initially
-  const defaultPortfolioId = "default-portfolio";
-  
   const { data: portfolios = [], isLoading: isLoadingPortfolios } = useQuery({
     queryKey: ["/api/portfolios"],
     queryFn: () => portfolioApi.getPortfolios(),
   });
 
+  // Use the first portfolio from the user's portfolios, or guest-portfolio for guests
+  const currentPortfolioId = portfolios.length > 0 ? portfolios[0].id : "guest-portfolio";
+  
   const { data: portfolio, isLoading: isLoadingPortfolio } = useQuery({
-    queryKey: ["/api/portfolios", defaultPortfolioId],
-    queryFn: () => portfolioApi.getPortfolio(defaultPortfolioId),
-    enabled: portfolios.length > 0 || !isLoadingPortfolios,
+    queryKey: ["/api/portfolios", currentPortfolioId],
+    queryFn: () => portfolioApi.getPortfolio(currentPortfolioId),
+    enabled: !isLoadingPortfolios && !!currentPortfolioId,
   });
 
   const { data: assets = [], isLoading: isLoadingAssets } = useQuery({
-    queryKey: ["/api/portfolios", defaultPortfolioId, "assets"],
-    queryFn: () => portfolioApi.getAssets(defaultPortfolioId),
-    enabled: !!portfolio,
+    queryKey: ["/api/portfolios", currentPortfolioId, "assets"],
+    queryFn: () => portfolioApi.getAssets(currentPortfolioId),
+    enabled: !!portfolio && !!currentPortfolioId,
   });
 
   const { data: analytics } = useQuery({
-    queryKey: ["/api/portfolios", defaultPortfolioId, "analytics"],
-    queryFn: () => portfolioApi.getAnalytics(defaultPortfolioId),
-    enabled: !!portfolio,
+    queryKey: ["/api/portfolios", currentPortfolioId, "analytics"],
+    queryFn: () => portfolioApi.getAnalytics(currentPortfolioId),
+    enabled: !!portfolio && !!currentPortfolioId,
   });
 
-  // Create default portfolio if none exists
-  const createDefaultPortfolio = async () => {
-    try {
-      await portfolioApi.createPortfolio({
-        name: "My Portfolio",
-        description: "Primary investment portfolio",
-      });
+  // Create portfolio mutation
+  const createPortfolioMutation = useMutation({
+    mutationFn: () => portfolioApi.createPortfolio({
+      name: "My Portfolio",
+      description: "Primary investment portfolio",
+    }),
+    onSuccess: async () => {
+      // Invalidate and refetch the portfolios query
+      await queryClient.invalidateQueries({ queryKey: ['/api/portfolios'] });
       toast({
         title: "Portfolio Created",
         description: "Your default portfolio has been created.",
       });
-    } catch (error) {
+    },
+    onError: (error) => {
+      console.error('Portfolio creation error:', error);
       toast({
         title: "Error",
         description: "Failed to create default portfolio.",
         variant: "destructive",
       });
-    }
-  };
+    },
+  });
 
   // Search for new assets to add
   const { data: searchResults = [], isLoading: isSearching } = useQuery({
@@ -75,7 +81,7 @@ export default function Portfolio() {
   // Add asset mutation
   const addAssetMutation = useMutation({
     mutationFn: (assetData: { symbol: string; name: string; assetType: string; quantity: string }) =>
-      portfolioApi.createAsset(defaultPortfolioId, {
+      portfolioApi.createAsset(currentPortfolioId, {
         symbol: assetData.symbol,
         name: assetData.name,
         assetType: assetData.assetType,
@@ -89,11 +95,13 @@ export default function Portfolio() {
         dailyChangePercent: "0",
         metadata: null,
       }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/portfolios'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/portfolios', defaultPortfolioId] });
-      queryClient.invalidateQueries({ queryKey: ['/api/portfolios', defaultPortfolioId, 'assets'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/portfolios', defaultPortfolioId, 'analytics'] });
+    onSuccess: async () => {
+      // Invalidate queries in sequence to avoid race conditions
+      await queryClient.invalidateQueries({ queryKey: ['/api/portfolios', currentPortfolioId, 'assets'] });
+      await queryClient.invalidateQueries({ queryKey: ['/api/portfolios', currentPortfolioId, 'analytics'] });
+      await queryClient.invalidateQueries({ queryKey: ['/api/portfolios', currentPortfolioId] });
+      // Also invalidate the main portfolios list to refresh totals
+      await queryClient.invalidateQueries({ queryKey: ['/api/portfolios'] });
       setSearchQuery("");
       setShowSearchResults(false);
       toast({
@@ -110,13 +118,18 @@ export default function Portfolio() {
     },
   });
 
+  // Set document title
+  useEffect(() => {
+    document.title = "myDex";
+  }, []);
+
   // Initialize default portfolio if none exists - using useEffect to prevent infinite loop
   useEffect(() => {
-    if (!isLoadingPortfolios && portfolios.length === 0 && !hasTriedCreatingPortfolio) {
+    if (!isLoadingPortfolios && portfolios.length === 0 && !hasTriedCreatingPortfolio && !createPortfolioMutation.isPending) {
       setHasTriedCreatingPortfolio(true);
-      createDefaultPortfolio();
+      createPortfolioMutation.mutate();
     }
-  }, [isLoadingPortfolios, portfolios.length, hasTriedCreatingPortfolio]);
+  }, [isLoadingPortfolios, portfolios.length, hasTriedCreatingPortfolio, createPortfolioMutation]);
 
   // Handle search input changes
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,12 +166,25 @@ export default function Portfolio() {
       <nav className="bg-dark-card border-b border-dark-border sticky top-0 z-50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-8">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
                   <i className="fas fa-chart-line text-white text-sm"></i>
                 </div>
-                <h1 className="text-xl font-bold text-gradient">InvestTrack Pro</h1>
+                <h1 className="text-xl font-bold text-gradient">myDex</h1>
+              </div>
+              
+              {/* Navigation Links */}
+              <div className="flex items-center space-x-1">
+                <Button variant="ghost" size="sm" className="text-white bg-brand-green/20 font-medium">
+                  Portfolio
+                </Button>
+                <Link to="/analysis">
+                  <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white font-medium">
+                    <BarChart3 className="h-4 w-4 mr-2" />
+                    Analysis
+                  </Button>
+                </Link>
               </div>
             </div>
             
@@ -179,9 +205,7 @@ export default function Portfolio() {
               >
                 <Settings className="h-5 w-5" />
               </Button>
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4" />
-              </div>
+              <UserDropdown />
             </div>
           </div>
         </div>
@@ -200,7 +224,7 @@ export default function Portfolio() {
           <div className="lg:col-span-1 space-y-6">
             <PortfolioSidebar 
               analytics={analytics}
-              portfolioId={defaultPortfolioId}
+              portfolioId={currentPortfolioId}
             />
           </div>
 
@@ -307,7 +331,7 @@ export default function Portfolio() {
                 <AssetList 
                   assets={filteredAssets} 
                   isLoading={isLoading}
-                  portfolioId={defaultPortfolioId}
+                  portfolioId={currentPortfolioId}
                 />
               )}
             </div>
@@ -319,7 +343,7 @@ export default function Portfolio() {
       <AddAssetModal
         isOpen={isAddAssetModalOpen}
         onClose={() => setIsAddAssetModalOpen(false)}
-        portfolioId={defaultPortfolioId}
+        portfolioId={currentPortfolioId}
       />
     </div>
   );

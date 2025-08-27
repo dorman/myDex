@@ -113,7 +113,7 @@ export default function PortfolioSidebar({ analytics, portfolioId }: PortfolioSi
                   <span className="text-sm text-gray-300">{getTypeLabel(type)}</span>
                 </div>
                 <span className="text-sm font-semibold text-white" data-testid={`percentage-${type}`}>
-                  {data.percentage.toFixed(1)}%
+                  {(data?.percentage || 0).toFixed(1)}%
                 </span>
               </div>
             ))}
@@ -136,7 +136,7 @@ export default function PortfolioSidebar({ analytics, portfolioId }: PortfolioSi
                     {analytics.bestPerformer.symbol}
                   </p>
                   <p className="text-xs text-brand-green" data-testid="text-best-performer-change">
-                    {parseFloat(analytics.bestPerformer.change) >= 0 ? "+" : ""}{parseFloat(analytics.bestPerformer.change).toFixed(2)}%
+                    {parseFloat(analytics.bestPerformer.change || '0') >= 0 ? "+" : ""}{parseFloat(analytics.bestPerformer.change || '0').toFixed(2)}%
                   </p>
                 </div>
               </div>
@@ -150,7 +150,7 @@ export default function PortfolioSidebar({ analytics, portfolioId }: PortfolioSi
                     {analytics.worstPerformer.symbol}
                   </p>
                   <p className="text-xs text-brand-red" data-testid="text-worst-performer-change">
-                    {parseFloat(analytics.worstPerformer.change) >= 0 ? "+" : ""}{parseFloat(analytics.worstPerformer.change).toFixed(2)}%
+                    {parseFloat(analytics.worstPerformer.change || '0') >= 0 ? "+" : ""}{parseFloat(analytics.worstPerformer.change || '0').toFixed(2)}%
                   </p>
                 </div>
               </div>

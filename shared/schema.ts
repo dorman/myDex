@@ -1,10 +1,32 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, decimal, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, decimal, timestamp, jsonb, boolean, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Users table - stores user authentication data from Supabase
+export const users = pgTable("users", {
+  id: uuid("id").primaryKey(), // This will match Supabase auth.users.id
+  email: text("email").notNull().unique(),
+  fullName: text("full_name"),
+  avatarUrl: text("avatar_url"),
+  createdAt: timestamp("created_at").default(sql`now()`),
+  updatedAt: timestamp("updated_at").default(sql`now()`),
+});
+
+// User favorite assets table
+export const userFavorites = pgTable("user_favorites", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid("user_id").notNull().references(() => users.id),
+  symbol: text("symbol").notNull(),
+  name: text("name").notNull(),
+  assetType: text("asset_type").notNull(), // crypto, stock, commodity, forex, etf
+  metadata: jsonb("metadata"), // Store additional data like icon, exchange, etc.
+  createdAt: timestamp("created_at").default(sql`now()`),
+});
+
 export const portfolios = pgTable("portfolios", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid("user_id").notNull().references(() => users.id), // Add user reference
   name: text("name").notNull(),
   description: text("description"),
   totalValue: decimal("total_value", { precision: 15, scale: 2 }).default("0.00"),
@@ -62,6 +84,22 @@ export const insertAssetSchema = createInsertSchema(assets).omit({
 export const insertPriceHistorySchema = createInsertSchema(priceHistory).omit({
   id: true,
 });
+
+export const insertUserSchema = createInsertSchema(users).omit({
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertUserFavoriteSchema = createInsertSchema(userFavorites).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = typeof users.$inferSelect;
+
+export type InsertUserFavorite = z.infer<typeof insertUserFavoriteSchema>;
+export type UserFavorite = typeof userFavorites.$inferSelect;
 
 export type InsertPortfolio = z.infer<typeof insertPortfolioSchema>;
 export type Portfolio = typeof portfolios.$inferSelect;
